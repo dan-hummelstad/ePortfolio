@@ -12,13 +12,13 @@ const FileCabinet: React.FC<CabinetProps> = (props: CabinetProps) => {
   useEffect(() => {
     function updateScale() {
       const viewportWidth = window.innerWidth;
-      const originalWidth = 450; // The original width of the element in pixels
+      const originalWidth = 500; // The original width of the element in pixels
       const buffer = 100; // Optional buffer in pixels to ensure no overflow
 
       if (viewportWidth < originalWidth + buffer) {
         setScale(viewportWidth / (originalWidth + buffer));
       } else {
-        setScale(1);
+        setScale(viewportWidth / (originalWidth + 500 + buffer));
       }
     }
 
