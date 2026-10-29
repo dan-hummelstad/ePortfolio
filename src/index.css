@@ -1,6 +1,93 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+@theme {
+  --text-xxs: 0.5rem;
+  --text-xxxs: 0.35rem;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 @layer base {
   :root {
@@ -74,4 +161,162 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+/* ---------- Dan's files ---------- */
+
+@theme {
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+:root {
+  --bg: #FCFCFA;
+  --desk: #E2E1DC;
+  --paper: #EBEAE6;
+  --ink: #111111;
+  --ink-2: #6B6B66;
+  --line: #D9D8D2;
+  --hole: #F4F3EF;
+  --kraft: #DCD0B8;
+  --hover: #F0EFEA;
+  --lamp: none;
+  color-scheme: light;
+}
+.dark {
+  --bg: #121210;
+  --desk: #121210;
+  --paper: #1E1E1B;
+  --ink: #E6E2D6;
+  --ink-2: #9C988C;
+  --line: #2E2E29;
+  --hole: #121210;
+  --kraft: #6B6150;
+  --hover: #262622;
+  --lamp: radial-gradient(ellipse 60% 55% at 47% 30%, #2A241B 0%, transparent 70%);
+  color-scheme: dark;
+}
+
+body { background: var(--bg); color: var(--ink); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+a { color: inherit; }
+
+.eyebrow { font-size: 9px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+
+/* landing */
+.stage {
+  position: fixed; inset: 0; display: flex; flex-direction: column;
+  background: var(--lamp), var(--stage, var(--bg));
+  transition: opacity 260ms linear, filter 260ms linear;
+}
+.stage.is-away { opacity: 0; filter: blur(3px); }
+.canvas-wrap { position: relative; flex: 1 1 auto; min-height: 0; transition: flex-basis 380ms cubic-bezier(.34,1.26,.64,1); }
+.hover-title {
+  font-size: 12px; opacity: 0; transform: translateY(-4px);
+  transition: opacity 120ms ease-out, transform 120ms ease-out;
+}
+.hover-title.is-on { opacity: 1; transform: none; }
+
+.panel { position: relative; z-index: 5; }
+@media (min-width: 900px) {
+  .canvas-wrap { position: absolute; inset: 0; }
+}
+@media (max-width: 899px) {
+  .canvas-wrap { flex-basis: 52dvh; flex-grow: 0; }
+  .canvas-wrap.is-open { flex-basis: 30dvh; }
+  .panel { flex: 1 1 0; overflow-y: auto; border-top: 1px solid var(--ink); }
+  .panel .rail { border: 0; }
+}
+
+.rail { border: 1px solid var(--ink); background: var(--bg); font-size: 11.5px; }
+.rail-row { display: flex; align-items: center; gap: 10px; padding: 10px 16px; transition: background 120ms ease-out; }
+.rail-row:hover { background: var(--hover); }
+.divider {
+  display: flex; align-items: center; gap: 10px; padding: 6px 16px; background: var(--kraft);
+  border-block: 1px solid var(--ink); font-size: 9px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+}
+.divider span { width: 14px; height: 3px; background: var(--ink); }
+
+/* file page */
+.page {
+  position: fixed; inset: 0; overflow-y: auto; background: var(--desk);
+  opacity: 0; pointer-events: none; transform: translateY(12px);
+  transition: opacity 220ms linear, transform 320ms ease-out;
+}
+.page.is-on { opacity: 1; pointer-events: auto; transform: none; }
+.back-tab {
+  position: sticky; top: 0; z-index: 2; display: inline-flex; gap: .6ch; align-items: baseline;
+  margin: 16px 0 0 0; padding: 8px 14px; border: 1px solid var(--ink); border-bottom: 0;
+  font-size: 11px; color: var(--ink);
+  transition: box-shadow 180ms ease-out;
+}
+.back-tab:hover { box-shadow: 0 -3px 0 var(--ink) inset; }
+
+.paper {
+  --feed: 22px;
+  display: grid; grid-template-columns: var(--feed) minmax(0, 1fr) var(--feed);
+  width: min(100%, calc(76ch + 2 * var(--feed) + 64px));
+  font-family: 'Courier Prime', ui-monospace, monospace; font-size: 13px; line-height: 20px;
+  background: var(--paper); color: var(--ink); border: 1px solid var(--line);
+  box-shadow: 0 1px 0 rgb(0 0 0 / .04), 0 18px 40px -24px rgb(0 0 0 / .35);
+}
+.feed {
+  background: radial-gradient(circle at 50% 50%, var(--hole) 3.2px, var(--ink-2) 3.7px, transparent 4.3px) center top / var(--feed) 18px repeat-y;
+  opacity: .55;
+}
+.feed:first-child { border-right: 1px dashed var(--line); }
+.feed:last-child { border-left: 1px dashed var(--line); }
+.sheet { padding: 36px 32px 48px; min-width: 0; }
+.sheet > * + * { margin-top: 40px; }
+.sheet h3 { text-align: center; font-weight: 400; margin-bottom: 4px; }
+.sheet a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+.letterhead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; font-style: normal; }
+.letterhead address { font-style: normal; }
+.refbox { display: grid; grid-template-columns: auto auto; column-gap: 4ch; align-self: start; border: 1px solid var(--ink); padding: 6px 1ch; }
+.refbox dd { text-align: right; }
+
+.fields { display: grid; grid-template-columns: 17ch minmax(0, 1fr); }
+.fields .span { grid-column: 1 / -1; }
+
+.sheet table { width: 100%; border-collapse: collapse; }
+.sheet th { font-weight: 400; text-align: left; padding: 0 1ch 4px 0; border-bottom: 1px solid var(--ink); }
+.sheet td { padding: 0 1ch 0 0; vertical-align: top; }
+.sheet tbody tr:first-child td { padding-top: 12px; }
+.sheet tbody { border-bottom: 1px solid var(--ink); }
+.sheet tbody tr:last-child td { padding-bottom: 12px; }
+
+.totals { width: min(100%, 40ch); margin-left: auto; margin-top: 12px; border-top: 1px solid var(--ink); border-bottom: 3px double var(--ink); padding: 8px 1ch; }
+.totals div, .figures div { display: flex; justify-content: space-between; gap: 2ch; }
+.figures { border-block: 1px solid var(--ink); padding: 12px 1ch; }
+.figures dd { text-align: right; }
+
+.status { text-align: center; }
+.status span { margin-left: 1ch; letter-spacing: 1ch; }
+.prose + .prose { margin-top: 20px; }
+
+.leader { display: flex; align-items: baseline; gap: 1ch; }
+.leader i { flex: 1; border-bottom: 2px dotted var(--ink-2); transform: translateY(-4px); }
+
+.attachment .photo { position: relative; width: min(100%, 360px); margin: 16px auto 0; transform: rotate(-1.6deg); }
+.attachment img { width: 100%; border: 6px solid #FFFFFF; box-shadow: 0 10px 24px -10px rgb(0 0 0 / .45); }
+.attachment .clip { position: absolute; left: 28px; top: -18px; width: 28px; height: 44px; transform: rotate(8deg); color: var(--ink-2); }
+
+.signoff { text-align: center; }
+.signoff p + p { margin-top: 20px; }
+
+@media (max-width: 640px) {
+  .paper { --feed: 14px; font-size: 11px; line-height: 17px; }
+  .feed { background-size: var(--feed) 14px; background-image: radial-gradient(circle at 50% 50%, var(--hole) 2.4px, var(--ink-2) 2.9px, transparent 3.4px); }
+  .sheet { padding: 24px 14px 36px; }
+  .fields { grid-template-columns: 16ch minmax(0, 1fr); }
+  .sheet thead { display: none; }
+  .sheet tbody { display: block; border-bottom: 1px solid var(--ink); border-top: 1px solid var(--ink); }
+  .sheet tr { display: flex; flex-wrap: wrap; column-gap: 2ch; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .sheet tr:last-child { border-bottom: 0; }
+  .sheet td { padding: 0 !important; }
+  .sheet .numbered td:first-child { display: none; }
+  .sheet td:last-child { margin-left: auto; text-align: right; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 100ms !important; transition-property: opacity !important; animation: none !important; }
 }
